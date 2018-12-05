@@ -12,9 +12,9 @@ public class FracCalc {
         // Checkpoint 1: Create a Scanner, read one line of input, pass that input to produceAnswer, print the result.
         // Checkpoint 2: Accept user input multiple times.
     	Scanner scanner = new Scanner(System.in);
-    	//System.out.println("Enter a math expression: ");
-    	//String input = scanner.nextLine();
-    	String a = produceAnswer("4/5 + 3/4");
+    	System.out.println("Enter a math expression: ");
+    	String input = scanner.nextLine();
+    	String a = produceAnswer(input);//"4/5 + 3/4");
     	System.out.println(a);
     }
     
@@ -39,18 +39,22 @@ public class FracCalc {
         String firstOperand = "";
         String secondOperand = "";
         String operator = "";
+        int whole1 = 0;
+        int numerator1 = 0;
+        int denom1 = 0;
+        int whole2 = 0;
+        int numerator2 = 0;
+        int denom2 = 0;
         int i = 0;
-        while (i < input.length()) {
-        	System.out.println("i : " + i);
-        	while (!(input.charAt(i) == ' ')) {
-        		i++;
-        	}
-        	firstOperand = input.substring(0, i);
-        	operator = input.substring(i,i+2);
-        	i += 3;
-        	secondOperand = input.substring(i);
-        	break;
+        System.out.println("i : " + i);
+        while (!(input.charAt(i) == ' ')) {
+        	i++;
         }
+       	firstOperand = input.substring(0, i);
+       	operator = input.substring(i, i + 2);
+       	i += 3;
+       	secondOperand = input.substring(i);
+        
         
         // System.out.println("so: " + secondOperand);
         // System.out.println("fo: " + firstOperand);
