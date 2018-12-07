@@ -14,7 +14,7 @@ public class FracCalc {
     	Scanner scanner = new Scanner(System.in);
     	System.out.println("Enter a math expression: ");
     	String input = scanner.nextLine();
-    	String a = produceAnswer(input);//"4/5 + 3/4");
+    	String a = produceAnswer(input);//"4/5 + 1_3/4");
     	System.out.println(a);
     }
     
@@ -46,7 +46,6 @@ public class FracCalc {
         int numerator2 = 0;
         int denom2 = 0;
         int i = 0;
-        System.out.println("i : " + i);
         while (!(input.charAt(i) == ' ')) {
         	i++;
         }
@@ -54,17 +53,68 @@ public class FracCalc {
        	operator = input.substring(i, i + 2);
        	i += 3;
        	secondOperand = input.substring(i);
+        int[] parts1 = wholeNumDenom(firstOperand);
+        int[] parts2 = wholeNumDenom(secondOperand);
+        whole1 = parts1[0];
+        numerator1 = parts1[1];
+        denom1 = parts1[2];
         
-        
-        // System.out.println("so: " + secondOperand);
-        // System.out.println("fo: " + firstOperand);
-        //System.out.println("op: " + operator);
-        return secondOperand;
+        whole2 = parts2[0];
+        numerator2 = parts2[1];
+        denom2 = parts2[2];
+        return "whole:" + whole2 + " numerator:" + numerator2 + " denominator:" + denom2;
     }
 
     // TODO: Fill in the space below with helper methods
-    
-    /**
+    public static int[] wholeNumDenom(String operand) {
+    	int whole = 0;
+    	int numerator = 0;
+    	int denom = 0;
+		String[] fraction = new String[operand.length()];
+		for (int i = 0; i < fraction.length; i++) {
+			fraction[i] = String.valueOf(operand.charAt(i)); //Sets array to what operand has
+		}
+		int prev = 0;
+		if (hasItem(fraction)) { //Checks if has _ meaning there is a whole num
+			int i = 0;
+			while (!fraction[i].equals("_")) {
+				i++;
+			}
+			whole = Integer.parseInt(operand.substring(0, i));
+			prev = i + 1;
+			while (!fraction[i].equals("/")) {
+				i++;
+			}
+			numerator = Integer.parseInt(operand.substring(prev, i));
+			denom = Integer.parseInt(operand.substring(i+1));
+		
+			int[] returnList = {whole, numerator, denom};
+			return returnList;
+    	}
+		else {
+			int i = 0;
+			while (!fraction[i].equals("/")) {
+				System.out.println(fraction[i]);
+				i++;
+			}
+			numerator = Integer.parseInt(operand.substring(prev, i));
+			denom = Integer.parseInt(operand.substring(i+1));
+			int[] returnList = {0, numerator, denom};
+			return returnList;
+		}
+    	
+	}
+    public static boolean hasItem(String[] fraction) {
+		for (String s:fraction) {
+			if (s.equals("_")) {
+				return true;
+			}
+		}
+    	return false;
+		
+	}
+
+	/**
      * greatestCommonDivisor - Find the largest integer that evenly divides two integers.
      *      Use this helper method in the Final Checkpoint to reduce fractions.
      *      Note: There is a different (recursive) implementation in BJP Chapter 12.
