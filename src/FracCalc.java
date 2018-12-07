@@ -12,10 +12,18 @@ public class FracCalc {
         // Checkpoint 1: Create a Scanner, read one line of input, pass that input to produceAnswer, print the result.
         // Checkpoint 2: Accept user input multiple times.
     	Scanner scanner = new Scanner(System.in);
-    	System.out.println("Enter a math expression: ");
-    	String input = scanner.nextLine();
-    	String a = produceAnswer(input);//"4/5 + 1_3/4");
-    	System.out.println(a);
+    	boolean done  = false;
+    	while (!done) {
+	    	System.out.println("Enter a math expression, or type quit to stop: ");
+	    	String input = scanner.nextLine();
+	    	if (input.equals("quit")) {
+	    		done = true;
+	    	}
+	    	else {
+	    		String a = produceAnswer(input);   //"4/5 + 1_3/4");
+	    		System.out.println(a);
+	    	}
+    	}
     }
     
     /**
