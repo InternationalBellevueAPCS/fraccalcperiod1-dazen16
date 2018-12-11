@@ -58,7 +58,7 @@ public class FracCalc {
         	i++;
         }
        	firstOperand = input.substring(0, i);
-       	operator = input.substring(i, i + 2);
+       	operator = input.substring(i + 1, i + 2);
        	i += 3;
        	secondOperand = input.substring(i);
         int[] parts1 = wholeNumDenom(firstOperand);
@@ -70,7 +70,27 @@ public class FracCalc {
         whole2 = parts2[0];
         numerator2 = parts2[1];
         denom2 = parts2[2];
-        return "whole:" + whole2 + " numerator:" + numerator2 + " denominator:" + denom2;
+        int lcm = leastCommonMultiple(denom1, denom2);
+        int wholeAnswer = whole1 + whole2;
+        int numeratorAnswer = 0;
+        int denomAnswer = 0;
+        if (operator.equals("*")) {
+        	numeratorAnswer = (numerator1 + whole1 * denom1)* (numerator2 + whole2 * denom2);
+        	denomAnswer = denom1 * denom2;
+        }
+        else if (operator.equals("/")) {
+        	numeratorAnswer = (numerator1 + whole1 * denom1) * (denom2);
+        	denomAnswer = denom1 * (numerator2 + whole2 * denom2);
+		}
+        else if (operator.equals("+")) {
+			numeratorAnswer = (((numerator1 + whole1 * denom1) * (lcm / denom1)) + ((numerator2 + whole2 * denom2) * (lcm / denom2)));
+			denomAnswer = lcm;
+		}
+        else if (operator.equals("-")) {
+        	numeratorAnswer = (((numerator1 + whole1 * denom1) * (lcm / denom1)) - ((numerator2 + whole2 * denom2) * (lcm / denom2)));
+        	denomAnswer = lcm;
+		}
+        return (numeratorAnswer + "/" + denomAnswer);
     }
 
     // TODO: Fill in the space below with helper methods
@@ -102,7 +122,6 @@ public class FracCalc {
 		else {
 			int i = 0;
 			while (!fraction[i].equals("/")) {
-				System.out.println(fraction[i]);
 				i++;
 			}
 			numerator = Integer.parseInt(operand.substring(prev, i));
