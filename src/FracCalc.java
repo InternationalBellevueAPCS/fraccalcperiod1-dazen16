@@ -12,11 +12,11 @@ public class FracCalc {
         // Checkpoint 1: Create a Scanner, read one line of input, pass that input to produceAnswer, print the result.
         // Checkpoint 2: Accept user input multiple times.
     	Scanner scanner = new Scanner(System.in);
-    	boolean done  = false;
+    	boolean done  = false; // Checks if user wants to end
     	while (!done) {
 	    	System.out.println("Enter a math expression, or type quit to stop: ");
 	    	String input = scanner.nextLine();
-	    	if (input.equals("quit")) {
+	    	if (input.equals("quit")) { // Ends code
 	    		done = true;
 	    	}
 	    	else {
@@ -44,7 +44,9 @@ public class FracCalc {
         //               Note: Answer does not need to be reduced, but it must be correct.
         // Final project: All answers must be reduced.
         //               Example "4/5 * 1_2/4" returns "1_1/5".
-        String firstOperand = "";
+        
+    	//Variables
+    	String firstOperand = "";
         String secondOperand = "";
         String operator = "";
         int whole1 = 0;
@@ -54,14 +56,15 @@ public class FracCalc {
         int numerator2 = 0;
         int denom2 = 0;
         int i = 0;
-        while (!(input.charAt(i) == ' ')) {
+        
+        while (!(input.charAt(i) == ' ')) { //Skips past whole nums to get to space operand space section
         	i++;
         }
-       	firstOperand = input.substring(0, i);
-       	operator = input.substring(i + 1, i + 2);
-       	i += 3;
-       	secondOperand = input.substring(i);
-        int[] parts1 = wholeNumDenom(firstOperand);
+       	firstOperand = input.substring(0, i); //First fraction will be before string
+       	operator = input.substring(i + 1, i + 2); //Operator will be immediately after space
+       	i += 3; // Gets index past space operand space
+       	secondOperand = input.substring(i); 
+        int[] parts1 = wholeNumDenom(firstOperand); //Method to convert inputs into a list of {whole, numerator, denominator}
         int[] parts2 = wholeNumDenom(secondOperand);
         whole1 = parts1[0];
         numerator1 = parts1[1];
@@ -70,30 +73,47 @@ public class FracCalc {
         whole2 = parts2[0];
         numerator2 = parts2[1];
         denom2 = parts2[2];
-        int lcm = leastCommonMultiple(denom1, denom2);
-        int wholeAnswer = whole1 + whole2;
+        
+        int lcm = leastCommonMultiple(denom1, denom2); //Find common denominator for addition and subtraction
         int numeratorAnswer = 0;
         int denomAnswer = 0;
+        
         if (operator.equals("*")) {
-        	numeratorAnswer = (numerator1 + whole1 * denom1)* (numerator2 + whole2 * denom2);
+        	numeratorAnswer = (numerator1 + whole1 * denom1)* (numerator2 + whole2 * denom2); // Converts both to an improper fraction to multiply
         	denomAnswer = denom1 * denom2;
         }
         else if (operator.equals("/")) {
-        	numeratorAnswer = (numerator1 + whole1 * denom1) * (denom2);
+        	numeratorAnswer = (numerator1 + whole1 * denom1) * (denom2); // Same as multiplication, but flip second operand to multiply
         	denomAnswer = denom1 * (numerator2 + whole2 * denom2);
 		}
         else if (operator.equals("+")) {
-			numeratorAnswer = (((numerator1 + whole1 * denom1) * (lcm / denom1)) + ((numerator2 + whole2 * denom2) * (lcm / denom2)));
+			numeratorAnswer = (((numerator1 + whole1 * denom1) * (lcm / denom1)) + ((numerator2 + whole2 * denom2) * (lcm / denom2))); // Converts to an improper fraction and then adds 
 			denomAnswer = lcm;
 		}
         else if (operator.equals("-")) {
-        	numeratorAnswer = (((numerator1 + whole1 * denom1) * (lcm / denom1)) - ((numerator2 + whole2 * denom2) * (lcm / denom2)));
+        	numeratorAnswer = (((numerator1 + whole1 * denom1) * (lcm / denom1)) - ((numerator2 + whole2 * denom2) * (lcm / denom2))); //Converts to an improper fraction and substracts
         	denomAnswer = lcm;
 		}
-        return (numeratorAnswer + "/" + denomAnswer);
+        
+        return simplifying(numeratorAnswer, denomAnswer); // Simplifies improper fractions to mixed
     }
 
     // TODO: Fill in the space below with helper methods
+    public static String simplifying(int numerator, int denom) {
+    	int whole = 0;
+    	int simpNum = 0;
+    	if (numerator / denom == 0) {
+    		return String.valueOf(numerator) + "/" + String.valueOf(denom); // If not a improper fraction, return as usual
+    	}
+    	else {
+    		whole = numerator/denom; // Remove extra nums more than denom
+    		simpNum = numerator - (whole * denom); // Gets simplified numerator
+    		if (simpNum == 0) { // Prevents return of a 0/denom
+				return String.valueOf(whole);
+			}
+    		return String.valueOf(whole) + "_" + String.valueOf(simpNum) + "/" + String.valueOf(denom);
+    	}
+    }
     public static int[] wholeNumDenom(String operand) {
     	int whole = 0;
     	int numerator = 0;
@@ -103,7 +123,7 @@ public class FracCalc {
 			fraction[i] = String.valueOf(operand.charAt(i)); //Sets array to what operand has
 		}
 		int prev = 0;
-		if (hasItem(fraction)) { //Checks if has _ meaning there is a whole num
+		if (hasItem(fraction)) { //Checks if has _ meaning there is a whole number
 			int i = 0;
 			while (!fraction[i].equals("_")) {
 				i++;
@@ -119,7 +139,7 @@ public class FracCalc {
 			int[] returnList = {whole, numerator, denom};
 			return returnList;
     	}
-		else {
+		else { // If just a fraction
 			int i = 0;
 			while (!fraction[i].equals("/")) {
 				i++;
@@ -131,7 +151,7 @@ public class FracCalc {
 		}
     	
 	}
-    public static boolean hasItem(String[] fraction) {
+    public static boolean hasItem(String[] fraction) { //Just checks if _ is in the fraction
 		for (String s:fraction) {
 			if (s.equals("_")) {
 				return true;
